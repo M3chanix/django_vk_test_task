@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+  </head>
+  <body>
+	<h2>
+		Ваше имя: <em>{{user.first_name}} {{user.last_name}}</em>
+		<ul>
+		{% for friend in friends_list %}
+			<li>{{ firend.first_name }} {{ firend.last_name}}</li>
+		</ul>
+	</h2>
+  </body>
+</html>
+
