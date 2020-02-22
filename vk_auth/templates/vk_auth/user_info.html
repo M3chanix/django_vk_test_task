@@ -8,8 +8,9 @@
 	<h2>
 		Ваше имя: <em>{{user.first_name}} {{user.last_name}}</em>
 		<ul>
-		{% for friend in friends_list %}
-			<li>{{ firend.first_name }} {{ firend.last_name}}</li>
+		{% for friend in friend_list %}
+			<li>{{ friend.first_name }} {{ friend.last_name}}</li>
+		{% endfor %}
 		</ul>
 	</h2>
   </body>
