@@ -119,3 +119,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTHLIB_OAUTH_CLIENTS = {
+    'vk': {
+        'client_id': 'Twitter Consumer Key',
+        'client_secret': 'Twitter Consumer Secret',
+        'request_token_url': 'https://api.twitter.com/oauth/request_token',
+        'request_token_params': None,
+        'access_token_url': 'https://api.twitter.com/oauth/access_token',
+        'access_token_params': None,
+        'refresh_token_url': None,
+        'authorize_url': 'https://api.twitter.com/oauth/authenticate',
+        'api_base_url': 'https://api.twitter.com/1.1/',
+        'client_kwargs': None
+    }
+}
+
