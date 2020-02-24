@@ -19,7 +19,7 @@ def check_auth(request):
             if Token.objects.get(user_id=request.session["user_id"]).expires_at > dt.datetime.now(dt.timezone.utc):
                 return redirect('get_vk_data')
             #перейти к авторизации и получению токена
-            return redirect('login')
+        return redirect('login')
             #передать присвоенный user_id в cookie
     else:
         return HttpResponse("Please enable cookies and try again")
