@@ -4,7 +4,7 @@ from django.template import loader
 from django.shortcuts import redirect
 import requests
 from vk_auth.models import Token
-
+import datetime as dt
 
 def index(request):
     #set test cookies
@@ -15,17 +15,9 @@ def check_auth(request):
     if request.session.test_cookie_worked():
         request.session.delete_test_cookie()
         #check user_id from cookies
-        if "user_id" in request.session:
-            #получить токен из базы по имени и пользователю
-            token = Token.objects.get(user_id=request.session["user_id"])
-            if token is not None:
-                #перейти к получению и отрисовке данных из vk
+        if "user_id" in request.session and Token.objects.all().filter(user_id=request.session["user_id"]).exists():
+            if Token.objects.get(user_id=request.session["user_id"]).expires_at > dt.datetime.now(dt.timezone.utc):
                 return redirect('get_vk_data')
-            else:
-                #перейти к авторизации и получению токена
-                return redirect('login')
-                #передать присвоенный user_id в cookie
-        else:
             #перейти к авторизации и получению токена
             return redirect('login')
             #передать присвоенный user_id в cookie
@@ -49,7 +41,10 @@ def authorize(request):
         response = requests.post('https://oauth.vk.com/access_token', data={'code':code, 'redirect_uri':redirect_uri, 
                                                                         'client_id':client_id, 'client_secret':client_secret})
         response = response.json()
-        token = Token(user_id=response['user_id'], access_token=response['access_token'], expires_in=response['expires_in'])
+        expires_in = dt.timedelta(float(response['expires_in']))
+        expires_at = dt.datetime.now(dt.timezone.utc)
+        expires_at += expires_in if expires_in.total_seconds() > 0 else dt.timedelta(weeks=260)
+        token = Token(user_id=response['user_id'], access_token=response['access_token'], expires_at=expires_at)
         token.save()
         request.session['user_id'] = response['user_id']
         #записать токен(если он сам не записывается в базу) и вернуть пользователя для сохранения в куки
